@@ -16,6 +16,13 @@
       encrypt: "sha512_crypt"
       confirm: yes
       salt_size: 7
+    - name: ad_server # variable
+      private: no
+      prompt: "Enter the AD server FQDN"
+    - name: ad_domain # variable
+      private: no
+      prompt: "Enter the AD domain"
+
 
   vars_files:
     - vars/Debian.yml

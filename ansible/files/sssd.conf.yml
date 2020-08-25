@@ -1,7 +1,7 @@
 [sssd]
 services = nss, pam
 config_file_version = 2
-domains = prod.mco
+domains = {{ ad_domain }}
 
 [nss]
 entry_negative_timeout = 0
@@ -18,9 +18,9 @@ auth_provider = ad
 chpass_provider = ad
 access_provider = ad
 dyndns_update = false
-ad_hostname = {{ ansible_hostname }}.prod.mco
-ad_server = dnn1-windom01.prod.mco
-ad_domain = prod.mco
+ad_hostname = {{ ansible_hostname }}.{{ ad_domain }}
+ad_server = {{ ad_server }}
+ad_domain = {{ ad_domain }}
 ldap_schema = ad
 ldap_id_mapping = true
 fallback_homedir = /home/%u

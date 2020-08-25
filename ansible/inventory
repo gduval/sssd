@@ -1,5 +1,5 @@
 [vms]
-10.16.14.126 hostname=dnn1-ai-rds-02-NEW
+10.xx.xx.xx hostname=xxxxxxxxxx
 
 
 
@@ -8,7 +8,7 @@
 [all:vars]
 ansible_connection='ssh'
 ansible_ssh_port='22'
-ansible_user='csadmin'
+ansible_user='admin'
 #ansible_ssh_pass=  # "sshpass" package is required for use "ansible_ssh_pass"
 ansible_ssh_private_key_file=~/.ssh/ansible
 ansible_python_interpreter='/usr/bin/python3'  # is required for use python3
