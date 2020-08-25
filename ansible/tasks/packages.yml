@@ -12,10 +12,6 @@
   apt:
     name: msktutil
 
-- name: Install the package "pexpect"
-  apt:
-    name: python-pexpect
-
 - name: Install system packages
   apt:
     name:
