@@ -1,0 +1,30 @@
+---
+
+- name: Deploy SSSD Configuration
+  hosts: vms
+  become: true
+  become_method: sudo
+  any_errors_fatal: true
+  gather_facts: true
+  vars_prompt:
+    - name: bind_user # variable
+      private: no
+      prompt: "Enter the AD admin username as the bind_user"
+    - name: bind_password #variable
+      private: yes
+      prompt: "Enter AD admin's password"
+      encrypt: "sha512_crypt"
+      confirm: yes
+      salt_size: 7
+
+  vars_files:
+    - vars/Debian.yml
+
+  pre_tasks:
+  - import_tasks: tasks/packages.yml
+    tags: [ install_packages ]
+
+  tasks:
+    - meta: flush_handlers
+    - import_tasks: tasks/configure.yml
+      tags: configure

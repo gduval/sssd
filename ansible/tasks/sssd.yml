@@ -1,0 +1,69 @@
+# sssd: Configure
+---
+- name: Remove file krb5.conf
+  file:
+    path: /etc/krb5.conf
+    state: absent
+
+- name: krb5 | copy the krb5.conf.yml template file
+  template:
+    src: files/krb5.conf.yml
+    dest: /etc/krb5.conf
+    mode: 0644
+  tags: [ krb5, sssd ]
+
+- name: Copy the secret to tmp
+  template:
+    src: files/secrets.yml
+    dest: /tmp/my.secret
+  tags: [ secrets, sssd ]
+
+- name: Initialize Kerberos and generate a keytab file
+  command: kinit --password-file=/tmp/my.secret "{{ bind_user }}"
+  no_log: true
+  tags: [ sssd_conf, keytab ]
+
+- name: Remove my.secret
+  file:
+    path: /tmp/my.secret
+    state: absent
+
+- name: bind server to AD 1 of 2
+  command: msktutil -N -c -b 'CN=COMPUTERS' -s {{ hostname|upper }}/{{ hostname }}.prod.mco -k my-keytab.keytab --computer-name {{ hostname }} --upn {{ hostname }}$ --server dnn1-windom01.prod.mco --user-creds-only
+  become: yes
+  tags: [ sssd_conf, bind ]
+
+- name: bind server to AD 2 of 2
+  command: msktutil -N -c -b 'CN=COMPUTERS' -s {{ hostname|upper }}/{{ hostname }} -k my-keytab.keytab --computer-name {{ hostname }} --upn {{ hostname }}$ --server dnn1-windom01.prod.mco --user-creds-only
+  become: yes
+  tags: [ sssd_conf, bind ]
+
+- name: Move keytab file to sssd_conf
+  command: mv my-keytab.keytab /etc/sssd/my-keytab.keytab
+  tags: [ sssd_conf, keytab ]
+
+- name: sssd | copy the sssd conf file
+  template:
+    src: files/sssd.conf.yml
+    dest: /etc/sssd/sssd.conf
+    mode: 0600
+  when: ansible_os_family == "Debian" or (ansible_os_family == "RedHat" and ansible_distribution_major_version == '7')
+  tags: [ sssd_conf,sssd]
+
+  # Debian
+
+- name: sssd | copy the pam conf file
+  template:
+    src: files/common-session.yml
+    dest: /etc/pam.d/common-session
+  when: ansible_os_family == "Debian" or (ansible_os_family == "RedHat" and ansible_distribution_major_version == '7')
+  tags: [ pam_conf,sssd]
+
+  # Debian
+- name: sssd | restart sssd service
+  systemd:
+    name: sssd
+    enabled: yes
+    state: restarted
+  when: ansible_os_family == "Debian"
+  tags: [ sssd_conf, sssd, sssd_finish]

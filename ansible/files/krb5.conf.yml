@@ -1,0 +1,11 @@
+[libdefaults]
+default_realm = PROD.MCO
+rdns = no
+dns_lookup_kdc = true
+dns_lookup_realm = true
+
+[realms]
+PROD.MCO = {
+kdc = dnn1-windom01.prod.mco
+admin_server = dnn1-windom01.prod.mco
+}

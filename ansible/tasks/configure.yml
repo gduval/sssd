@@ -1,0 +1,6 @@
+---
+
+# Configure SSSD
+- import_tasks: ../tasks/sssd.yml
+  ignore_errors: no
+  tags: [ sssd, configure ]
