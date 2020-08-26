@@ -1,3 +1,12 @@
+Run Ansible playbook --or-- follow manual steps below
+
+
+The following is based on https://sssd.io/ and https://github.com/SSSD/sssd
+
+
+
+
+
 ### Step 1: Install all necessary packages with the following commands:
 
  
