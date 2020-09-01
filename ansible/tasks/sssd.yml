@@ -1,20 +1,15 @@
 # sssd: Configure
 ---
-- name: Remove file krb5.conf
-  file:
-    path: /etc/krb5.conf
-    state: absent
-
-- name: krb5 | copy the krb5.conf.yml template file
+- name: krb5 | copy the krb5.conf template file
   template:
-    src: files/krb5.conf.yml
+    src: templates/krb5.conf.j2
     dest: /etc/krb5.conf
     mode: 0644
   tags: [ krb5, sssd ]
 
 - name: Copy the secret to tmp
   template:
-    src: files/secrets.yml
+    src: templates/secrets.j2
     dest: /tmp/my.secret
   tags: [ secrets, sssd ]
 
@@ -44,10 +39,9 @@
 
 - name: sssd | copy the sssd conf file
   template:
-    src: files/sssd.conf.yml
+    src: templates/sssd.conf.j2
     dest: /etc/sssd/sssd.conf
     mode: 0600
-  when: ansible_os_family == "Debian" or (ansible_os_family == "RedHat" and ansible_distribution_major_version == '7')
   tags: [ sssd_conf,sssd]
 
   # Debian
@@ -56,7 +50,6 @@
   template:
     src: files/common-session.yml
     dest: /etc/pam.d/common-session
-  when: ansible_os_family == "Debian" or (ansible_os_family == "RedHat" and ansible_distribution_major_version == '7')
   tags: [ pam_conf,sssd]
 
   # Debian
@@ -65,7 +58,6 @@
     name: sssd
     enabled: yes
     state: restarted
-  when: ansible_os_family == "Debian"
   tags: [ sssd_conf, sssd, sssd_finish]
 
 - name: Add domain admins to sudoers
