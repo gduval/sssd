@@ -29,15 +29,15 @@ sudo vi /etc/krb5.conf
 The new file should contain the following contents:
 
 libdefaults]
-default_realm = NOTS.LOCAL
+default_realm = {DOMAIN_NAME}
 rdns = no
 dns_lookup_kdc = true
 dns_lookup_realm = true
 
 [realms]
 NOTS.LOCAL = {
-kdc = winserver19.nots.local
-admin_server = winserver19.nots.local
+kdc = {DOMAIN_SERVER}
+admin_server = {DOMAIN_SERVER}
 }
 
 ### Step 3: Initialize Kerberos and generate a keytab file:
@@ -47,9 +47,9 @@ kinit administrator
 
 klist
 
-msktutil -N -c -b 'CN=COMPUTERS' -s $HOSTNAME/$HOSTNAME.prod.mco -k my-keytab.keytab --computer-name $HOSTNAME --upn $HOSTNAME$ --server dnn1-windom01.prod.mco --user-creds-only
+msktutil -N -c -b 'CN=COMPUTERS' -s $HOSTNAME/$HOSTNAME.prod.mco -k my-keytab.keytab --computer-name $HOSTNAME --upn $HOSTNAME$ --server {DOMAIN_SERVER} --user-creds-only
 
-msktutil -N -c -b 'CN=COMPUTERS' -s $HOSTNAME/$HOSTNAME -k my-keytab.keytab --computer-name $HOSTNAME --upn $HOSTNAME$ --server dnn1-windom01.prod.mco --user-creds-only
+msktutil -N -c -b 'CN=COMPUTERS' -s $HOSTNAME/$HOSTNAME -k my-keytab.keytab --computer-name $HOSTNAME --upn $HOSTNAME$ --server {DOMAIN_SERVER} --user-creds-only
 
 kdestroy
 
