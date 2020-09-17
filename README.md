@@ -28,6 +28,17 @@ sudo vi /etc/krb5.conf
 
 The new file should contain the following contents:
 
+libdefaults]
+default_realm = NOTS.LOCAL
+rdns = no
+dns_lookup_kdc = true
+dns_lookup_realm = true
+
+[realms]
+NOTS.LOCAL = {
+kdc = winserver19.nots.local
+admin_server = winserver19.nots.local
+}
 
 ### Step 3: Initialize Kerberos and generate a keytab file:
 
